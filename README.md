@@ -1,33 +1,29 @@
-# MLG
-Machine Learning in Genomics Course ETH.
+# Predicting Gene Expression from Chromatin Landscape
 
-# THE AMOEBAS
-
-![APM](https://img.shields.io/apm/l/vim-mode) 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
-<img src="amoeba.png" width="450">
-
-## Moodle: 
-https://moodle-app2.let.ethz.ch/course/view.php?id=16540
-
-## Project server:
-https://project.ml4g.ethz.ch/
-
-
-# Project 1 - Prediction of Gene Expression from Chromatin Landscape
+_Project for course "Machine Learning for Genomics" at ETH._
 
 ## Setup
+
 Dependencies for conda and pip are listed in `environment.yml` and `requirements.txt`.
-In the project base folder execute in the command line:
+
+The main notable requirement is `python=3.9.0` due to `3.10` not working with some other requirements.
+`environment.yml` contains my whole setup, however, most is macOS Metal specific libraries.
+
+Every python dependency is listed in `requirement.txt` without nested dependencies.
+`tensorflow-macos` and `tensorflow-metal` are also system specific dependencies, and varies for other systems
+([installation guide](https://www.tensorflow.org/install/pip)).
+ 
+Most reliable way to replicate environment:
 ```commandline
-conda env create -f environment.yml
+conda create -n gene_exp_rnn python=3.9
+conda activate gene_exp_rnn
 pip install -r requirements.txt
 ```
+(..and install tensorflow according to guide above and remove other tensorflow dependencies if not using Metal.)
 
-## Data
-The [project data](https://polybox.ethz.ch/index.php/s/iY6d8qbMMiy4dQh) should be unzipped into `/task_1/data`. For example, the X1 dataset train info should be available at `/task_1/data/CAGE-train/X1_train_info.tsv`.
+### Data
+The [project data](https://polybox.ethz.ch/index.php/s/iY6d8qbMMiy4dQh) should be unzipped into `./data`. For example, the X1 dataset train info should be available at `./data/CAGE-train/X1_train_info.tsv`.
 
-We're using the human reference genome version hg38. It should be downloaded into the folder `data` from `https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa`.
-
-## Dependencies
+### Notable dependencies
+- Python 3.9.0
 - Histone modification data processing with [pyBigWig](https://github.com/deeptools/pyBigWig).
