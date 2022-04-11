@@ -90,18 +90,6 @@ def filter_genes_by_chr(genes: pd.DataFrame, chromosomes: list[int]) -> pd.DataF
     return genes[genes.chr.isin(chromosomes)]
 
 
-def create_submission(test_genes: pd.DataFrame, pred: np.array) -> None:
-    save_dir = '../data/submissions'
-    file_name = 'gex_predicted.csv'  # DO NOT CHANGE THIS
-    zip_name = "Kasak_Liine_Project1.zip"
-    save_path = f'{save_dir}/{zip_name}'
-    compression_options = dict(method="zip", archive_name=file_name)
-
-    test_genes['gex_predicted'] = pred.flatten().tolist()
-    print(f'Saving submission to path {os.path.abspath(save_dir)}')
-    test_genes[['gene_name', 'gex_predicted']].to_csv(save_path, compression=compression_options)
-
-
 if __name__ == '__main__':
     all_genes = load_train_genes()
     genes = filter_genes_by_chr(all_genes, get_train_chr()[:5])

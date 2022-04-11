@@ -1,65 +1,28 @@
 import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
 
-from plotting_utils.plotting_metrics import euclidean_distance
 from utils.data_loader import *
 
 
-def plot_kde(x1, x2, min_v=-300, max_v=800, balance=True, names=['test', 'train']):
-    """Plots the distribution between two variables of interest, x1 and x2.
+def euclidean_distance(x):
+    """Computes euclidean distance between coordinates in x
 
-    :param x1: variable 1 (smallest number of samples - if balance = True)
-    :type x1: pandas.core.frame.DataFrame 
-
-    :param x2: variable 2  (lagestest number of samples - if balance = True)
-    :type x2: pandas.core.frame.DataFrame
-
-    :param names: list containing strings of dataset names (for plotting) in same order provided
-    :type names: list
-
-    :param balace: to balance the sets based on x1 dimension (dim 0), defaults to True
-    :type balace: bool, optional
+    :param x: a vecotr of values
+    :type x: list or numpy arrau
+    :return: scalar value of euclidean distance
+    :rtype: scalar
     """
-
-    if balance:
-        # Balance data
-        n_x1 = np.shape(x1)[0]
-        n_x2 = np.shape(x2)[0]
-
-        # Balance by smallest set
-        if n_x1 <= n_x2:
-            x2 = x2.sample(n_x1)
-        else:
-            x1 = x1.sample(n_x2)
-
-    # Plot KDE
-    fig, ax = plt.subplots()
-    sns.kdeplot(x1.values, label=names[0])
-    sns.kdeplot(x2.values, label=names[1])
-    plt.title("Data Distributions ({}-{})".format(names[0], names[1]))
-    plt.xlim([min_v, max_v])
-    ax.legend()
-    plt.show()
-
-    return fig, ax
+    dist = np.linalg.norm(x)
+    return dist
 
 
-def plot_hvg(chromosome=1, n=20, show=True, figsize=(8, 8)):
+def plot_hvg(chromosome=1, n=20, show=True, fig_size=(8, 8)):
     """PLots the highly variable (HVG) gex values between cell lines 1 and 2
 
     :param chromosome: Chromosome of interest, defaults to 1
-    :type chromosome: int, optional
     :param n: number of top HVG gex to show, defaults to 20
-
-    :type n: int, optional
     :param show: to show plot or not, defaults to True
-    :type show: bool, optional
-
-    :param figsize: set the figure ax for largers n, defaults to (8, 8)
-    :type figsize: tuple, optional
+    :param fig_size: set the figure ax for largers n, defaults to (8, 8)
     :return: top n highly variable genes between cell lines
-    :rtype: pandas.core.DataFrame
     """
 
     # Get data
@@ -83,7 +46,7 @@ def plot_hvg(chromosome=1, n=20, show=True, figsize=(8, 8)):
         })
     x.set_index('gene_name', inplace=True, drop=True)
 
-    # Get eucliden distances
+    # Get euclidean distances
     maxi = 1
     mini = 0
     dist = np.array(x.apply(lambda x: euclidean_distance(x), axis=1))
@@ -100,7 +63,7 @@ def plot_hvg(chromosome=1, n=20, show=True, figsize=(8, 8)):
     dist_df.sort_values(by=['euclidean_dist'], ascending=False, inplace=True)
 
     if show:
-        ax = dist_df.iloc[:n, :].plot.barh(figsize=figsize)
+        ax = dist_df.iloc[:n, :].plot.barh(figsize=fig_size)
         ax.invert_yaxis()
         plt.title(
             'Top {} most variable gex between cell-lines for chromosome {}'.format(n, chromosome))
@@ -109,7 +72,7 @@ def plot_hvg(chromosome=1, n=20, show=True, figsize=(8, 8)):
     return dist_df
 
 
-def plot_chr_similartiy(show=True):
+def plot_chr_similarity(show=True):
     """Plots chromosome similarities (euclidean) between cell-lines X1 and X2
 
     :param show: to show the plot results, defaults to True
